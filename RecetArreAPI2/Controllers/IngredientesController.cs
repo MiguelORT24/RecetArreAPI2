@@ -33,7 +33,7 @@ namespace RecetArreAPI2.Controllers
         public async Task<ActionResult<IEnumerable<IngredientesDto>>> GetIngredientes()
         {
             var ingredientes = await context.Ingredientes
-                .OrderByDescending(i => i.CreadoUtc)
+                .OrderByDescending(i => i.Nombre)
                 .ToListAsync();
 
             return Ok(mapper.Map<List<IngredientesDto>>(ingredientes));
@@ -73,6 +73,7 @@ namespace RecetArreAPI2.Controllers
             }
 
             var ingrediente = mapper.Map<Ingrediente>(ingredienteCreacionDto);
+            //Podemos seguir cambiando valores a ese mapa después de mapearlo, no es necesario que todo venga del DTO
             ingrediente.CreadoUtc = DateTime.UtcNow;
             ingrediente.CreadoPorUsuarioId = usuarioId;
 
@@ -94,6 +95,8 @@ namespace RecetArreAPI2.Controllers
                 return NotFound(new { mensaje = "Ingrediente no encontrado" });
             }
 
+            //Verificamos si el nombre se está modificando, si es así,
+            //verificamos que no exista otro ingrediente con ese nombre
             if (!ingrediente.Nombre.Equals(ingredienteModificacionDto.Nombre, StringComparison.OrdinalIgnoreCase))
             {
                 var existe = await context.Ingredientes
