@@ -26,4 +26,8 @@
     <PackageReference Include="Scalar.AspNetCore" Version="2.12.41" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Profiles\" />
+  </ItemGroup>
+
 </Project>
