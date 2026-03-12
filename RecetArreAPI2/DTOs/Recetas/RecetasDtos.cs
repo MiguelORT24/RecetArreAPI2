@@ -12,10 +12,10 @@
         public string? Instrucciones { get; set; }
         public DateTime CreadoUtc { get; set; }
 
-        // Lista de ingredientes incluidos en la receta (si se desea mapear)
+        // Lista de ingredientes incluidos en la receta 
         public List<IngredientesDto>? Ingredientes { get; set; }
         
-        // Lista de tiempos asociados a la receta (ej. desayuno, comida...)
+        // Lista de tiempos asociados a la receta 
         public List<TiempoDto>? Tiempos { get; set; }
     }
 

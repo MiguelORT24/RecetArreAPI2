@@ -12,7 +12,7 @@ namespace RecetArreAPI2.Models
         [StringLength(100, MinimumLength = 2)]
         public string Nombre { get; set; } = default!;
 
-        [StringLength(2000)]
+        [Required] 
         public string? Instrucciones { get; set; }
 
         public DateTime CreadoUtc { get; set; } = DateTime.UtcNow;
@@ -28,6 +28,9 @@ namespace RecetArreAPI2.Models
         
         // Relación muchos-a-muchos con Ingrediente a través de Ing_Rec
         public ICollection<Ing_Rec> Ing_Recs { get; set; } = new List<Ing_Rec>();
+        
+        // Relación muchos-a-muchos con Categoria a través de Cat_Rec
+        public ICollection<Cat_Rec> Cat_Recs { get; set; } = new List<Cat_Rec>();
     }
 }
 

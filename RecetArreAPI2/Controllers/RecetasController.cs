@@ -51,6 +51,32 @@ namespace RecetArreAPI2.Controllers
             return Ok(result);
         }
 
+        //filtrar por categorías
+        [HttpGet("filtrar/categorias")]
+        public async Task<ActionResult<IEnumerable<RecetaDto>>> FiltrarPorCategorias([FromQuery] List<int> categoriaId)
+        {
+            if (categoriaId == null || !categoriaId.Any())
+            {
+                return BadRequest(new { mensaje = "No llegan los IDs Master" });
+            }
+            var recetas = await context.Recetas
+                .Include(r => r.Cat_Recs).ThenInclude(cr => cr.Categoria)
+                .Include(r => r.Ing_Recs).ThenInclude(ir => ir.Ingrediente)
+                .Include(r => r.Rec_Tiems).ThenInclude(rt => rt.Tiempo)
+                .Where(r => r.Cat_Recs.Any(cr => categoriaId.Contains(cr.CategoriaId)))
+                .OrderByDescending(r => r.CreadoUtc)
+                .ToListAsync();
+            var result = recetas.Select(r => new RecetaDto
+            {
+                Id = r.Id,
+                Nombre = r.Nombre,
+                Instrucciones = r.Instrucciones,
+                CreadoUtc = r.CreadoUtc,
+                Ingredientes = r.Ing_Recs?.Select(ir => mapper.Map<RecetArreAPI2.DTOs.Ingredientes.IngredientesDto>(ir.Ingrediente)).ToList()
+            }).ToList();
+            return Ok(result);
+        }
+
         // GET: api/recetas/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<RecetaDto>> GetReceta(int id)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RecetArreAPI2.Context;
@@ -11,9 +12,11 @@ using RecetArreAPI2.Context;
 namespace RecetArreAPI2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260310162209_receta")]
+    partial class receta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,21 +250,6 @@ namespace RecetArreAPI2.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("RecetArreAPI2.Models.Cat_Rec", b =>
-                {
-                    b.Property<int>("RecetaId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("CategoriaId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RecetaId", "CategoriaId");
-
-                    b.HasIndex("CategoriaId");
-
-                    b.ToTable("Cat_Recs");
-                });
-
             modelBuilder.Entity("RecetArreAPI2.Models.Categoria", b =>
                 {
                     b.Property<int>("Id")
@@ -472,25 +460,6 @@ namespace RecetArreAPI2.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RecetArreAPI2.Models.Cat_Rec", b =>
-                {
-                    b.HasOne("RecetArreAPI2.Models.Categoria", "Categoria")
-                        .WithMany("Cat_Recs")
-                        .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RecetArreAPI2.Models.Receta", "Receta")
-                        .WithMany("Cat_Recs")
-                        .HasForeignKey("RecetaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Categoria");
-
-                    b.Navigation("Receta");
-                });
-
             modelBuilder.Entity("RecetArreAPI2.Models.Categoria", b =>
                 {
                     b.HasOne("RecetArreAPI2.Models.ApplicationUser", "CreadoPorUsuario")
@@ -559,11 +528,6 @@ namespace RecetArreAPI2.Migrations
                     b.Navigation("CreadoPorUsuario");
                 });
 
-            modelBuilder.Entity("RecetArreAPI2.Models.Categoria", b =>
-                {
-                    b.Navigation("Cat_Recs");
-                });
-
             modelBuilder.Entity("RecetArreAPI2.Models.Ingrediente", b =>
                 {
                     b.Navigation("Ing_Recs");
@@ -571,8 +535,6 @@ namespace RecetArreAPI2.Migrations
 
             modelBuilder.Entity("RecetArreAPI2.Models.Receta", b =>
                 {
-                    b.Navigation("Cat_Recs");
-
                     b.Navigation("Ing_Recs");
 
                     b.Navigation("Rec_Tiems");

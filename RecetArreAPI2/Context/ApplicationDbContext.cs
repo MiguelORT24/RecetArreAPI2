@@ -17,6 +17,7 @@ namespace RecetArreAPI2.Context
         public DbSet<Rec_Tiem> Rec_Tiems { get; set; }
         public DbSet<Tiempo> Tiempos { get; set; }
         public DbSet<Ing_Rec> Ing_Recs { get; set; }
+        public DbSet<Cat_Rec> Cat_Recs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -49,6 +50,22 @@ namespace RecetArreAPI2.Context
                 // Índices
                 entity.HasIndex(e => e.Nombre).IsUnique();
                 entity.HasIndex(e => e.CreadoPorUsuarioId);
+            });
+
+            // Configuración de CAT_REC (tabla intermedia entre Receta y Categoria)
+            builder.Entity<Cat_Rec>(entity =>
+            {
+                entity.HasKey(e => new { e.RecetaId, e.CategoriaId });
+
+                entity.HasOne(e => e.Receta)
+                      .WithMany(r => r.Cat_Recs)
+                      .HasForeignKey(e => e.RecetaId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Categoria)
+                      .WithMany(c => c.Cat_Recs)
+                      .HasForeignKey(e => e.CategoriaId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             // Configuración de ING_REC (tabla intermedia entre Receta e Ingrediente)

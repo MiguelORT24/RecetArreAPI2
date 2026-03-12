@@ -22,5 +22,8 @@ namespace RecetArreAPI2.Models
 
 
         public ApplicationUser? CreadoPorUsuario { get; set; }
+        
+        // Relación muchos-a-muchos con Receta a través de Cat_Rec
+        public ICollection<Cat_Rec> Cat_Recs { get; set; } = new List<Cat_Rec>();
     }
 }
