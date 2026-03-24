@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RecetArreAPI2.Context;
+using RecetArreAPI2.Mappings;
 using RecetArreAPI2.Models;
 using Scalar.AspNetCore;
 using System.Text;
 using System.Text.Json.Serialization;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 // Configurar AutoMapper
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
+
 
 //Configurar la seguridad de Identity (Microsoft)
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()

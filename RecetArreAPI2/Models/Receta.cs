@@ -31,6 +31,9 @@ namespace RecetArreAPI2.Models
         
         // Relación muchos-a-muchos con Categoria a través de Cat_Rec
         public ICollection<Cat_Rec> Cat_Recs { get; set; } = new List<Cat_Rec>();
+        
+        // Comentarios asociados a la receta
+        public ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
     }
 }
 

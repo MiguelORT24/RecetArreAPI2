@@ -4,6 +4,7 @@ using RecetArreAPI2.DTOs.Categorias;
 using RecetArreAPI2.DTOs.Ingredientes;
 using RecetArreAPI2.DTOs.Recetas;
 using RecetArreAPI2.DTOs.Tiempos;
+using RecetArreAPI2.DTOs.Comentarios;
 using RecetArreAPI2.Models;
 using System.Linq;
 
@@ -42,6 +43,20 @@ namespace RecetArreAPI2.Mappings
             CreateMap<RecetaModificacionDto, Receta>()
                 .ForMember(dest => dest.Ing_Recs, opt => opt.Ignore())
                 .ForMember(dest => dest.Rec_Tiems, opt => opt.Ignore());
+
+            // Comentario
+            CreateMap<Comentario, ComentarioDto>()
+                .ForMember(dest => dest.CreadoPorUsuarioNombre, opt => opt.MapFrom(src => src.CreadoPorUsuario != null ? src.CreadoPorUsuario.UserName : null));
+
+            CreateMap<ComentarioCreacionDto, Comentario>()
+                .ForMember(dest => dest.CreadoUtc, opt => opt.Ignore())
+                .ForMember(dest => dest.CreadoPorUsuarioId, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<ComentarioModificacionDto, Comentario>()
+                .ForMember(dest => dest.CreadoUtc, opt => opt.Ignore())
+                .ForMember(dest => dest.CreadoPorUsuarioId, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

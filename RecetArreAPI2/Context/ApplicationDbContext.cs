@@ -18,6 +18,7 @@ namespace RecetArreAPI2.Context
         public DbSet<Tiempo> Tiempos { get; set; }
         public DbSet<Ing_Rec> Ing_Recs { get; set; }
         public DbSet<Cat_Rec> Cat_Recs { get; set; }
+        public DbSet<Comentario> Comentarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -127,6 +128,37 @@ namespace RecetArreAPI2.Context
                       .WithOne(rt => rt.Receta)
                       .HasForeignKey(rt => rt.RecetaId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configuración de Comentario
+            builder.Entity<Comentario>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Contenido)
+                      .HasMaxLength(700)
+                      .IsRequired();
+
+                entity.Property(e => e.CreadoUtc)
+                      .IsRequired()
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                // Relación con ApplicationUser (autor)
+                entity.HasOne(e => e.CreadoPorUsuario)
+                      .WithMany()
+                      .HasForeignKey(e => e.CreadoPorUsuarioId)
+                      .OnDelete(DeleteBehavior.SetNull)
+                      .IsRequired(false);
+
+                // Relación con Receta
+                entity.HasOne(e => e.Receta)
+                      .WithMany(r => r.Comentarios)
+                      .HasForeignKey(e => e.RecetaId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+
+                entity.HasIndex(e => e.RecetaId);
+                entity.HasIndex(e => e.CreadoPorUsuarioId);
             });
 
             // Configuración de REC_TIEM (tabla intermedia)
