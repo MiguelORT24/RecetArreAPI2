@@ -34,6 +34,9 @@ namespace RecetArreAPI2.Models
         
         // Comentarios asociados a la receta
         public ICollection<Comentario> Comentarios { get; set; } = new List<Comentario>();
+
+        // Ratings asociados a la receta
+        public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
     }
 }
 

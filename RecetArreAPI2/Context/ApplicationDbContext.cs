@@ -19,6 +19,7 @@ namespace RecetArreAPI2.Context
         public DbSet<Ing_Rec> Ing_Recs { get; set; }
         public DbSet<Cat_Rec> Cat_Recs { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,6 +52,39 @@ namespace RecetArreAPI2.Context
                 // Índices
                 entity.HasIndex(e => e.Nombre).IsUnique();
                 entity.HasIndex(e => e.CreadoPorUsuarioId);
+            });
+
+            // Configuración de Rating
+            builder.Entity<Rating>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Calificacion)
+                      .IsRequired();
+
+                entity.Property(e => e.CalificadoUtc)
+                      .IsRequired()
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                // Relación con ApplicationUser (autor de la calificación)
+                entity.HasOne(e => e.CalificadoPorUsuario)
+                      .WithMany()
+                      .HasForeignKey(e => e.CalificadoPorUsuarioId)
+                      .OnDelete(DeleteBehavior.SetNull)
+                      .IsRequired(false);
+
+                // Relación con Receta
+                entity.HasOne(e => e.Receta)
+                      .WithMany(r => r.Ratings)
+                      .HasForeignKey(e => e.RecetaId)
+                      .OnDelete(DeleteBehavior.Cascade)
+                      .IsRequired();
+
+                // Un usuario solo puede calificar una receta una vez
+                entity.HasIndex(e => new { e.RecetaId, e.CalificadoPorUsuarioId }).IsUnique();
+
+                entity.HasIndex(e => e.RecetaId);
+                entity.HasIndex(e => e.CalificadoPorUsuarioId);
             });
 
             // Configuración de CAT_REC (tabla intermedia entre Receta y Categoria)
